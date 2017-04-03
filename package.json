@@ -1,17 +1,40 @@
 {
-    "buildNpmdoc":"nightmare",
+    "author": "kai zhu <kaizhu256@gmail.com>",
+    "buildNpmdoc": "nightmare",
+    "description": "api documentation for [nightmare (v2.10.0)](https://github.com/segmentio/nightmare#readme) [![npm package](https://img.shields.io/npm/v/npmdoc-nightmare.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-nightmare) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-nightmare.svg)](https://travis-ci.org/npmdoc/node-npmdoc-nightmare)",
     "devDependencies": {
-        "nightmare": "*",
         "electron-lite": "kaizhu256/node-electron-lite#alpha",
+        "nightmare": "*",
         "utility2": "kaizhu256/node-utility2#alpha"
     },
-    "name":"npmdoc-nightmare",
+    "engines": {
+        "node": ">=4.0"
+    },
+    "homepage": "https://github.com/npmdoc/node-npmdoc-nightmare",
+    "keywords": [
+        "documentation",
+        "nightmare"
+    ],
+    "license": "MIT",
+    "main": "lib.npmdoc_nightmare.js",
+    "name": "npmdoc-nightmare",
+    "nameAlias": "npmdoc_nightmare",
+    "nameOriginal": "npmdoc-nightmare",
+    "os": [
+        "darwin",
+        "linux"
+    ],
     "repository": {
         "type": "git",
         "url": "https://github.com/npmdoc/node-npmdoc-nightmare.git"
     },
     "scripts": {
-        "build-ci": "utility2 shReadmeTest build_ci.sh"
+        "build-ci": "utility2 shReadmeTest build_ci.sh",
+        "env": "env",
+        "heroku-postbuild": "(set -e; npm install \"kaizhu256/node-utility2#alpha\"; utility2 shDeployHeroku)",
+        "postinstall": "if [ -f npm_scripts.sh ]; then ./npm_scripts.sh postinstall; fi",
+        "start": "(set -e; export PORT=${PORT:-8080}; utility2 start test.js)",
+        "test": "(set -e; export PORT=$(utility2 shServerPortRandom); utility2 test test.js)"
     },
     "version": "0.0.1"
 }
