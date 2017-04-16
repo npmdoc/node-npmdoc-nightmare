@@ -1,4 +1,4 @@
-<div class="apidocDiv">
+<html><head></head><body><div class="apidocDiv">
 <style>
 /*csslint
 */
@@ -47,17 +47,10 @@
 }
 </style>
 <h1>api documentation for
-    <a
-
-        href="https://github.com/segmentio/nightmare#readme"
-
-    >nightmare (v2.10.0)</a>
+    <a href="https://github.com/segmentio/nightmare#readme">nightmare (v2.10.0)</a>
 </h1>
 <h4>A high-level browser automation library.</h4>
-<div class="apidocSectionDiv"><a
-    href="#apidoc.tableOfContents"
-    id="apidoc.tableOfContents"
-><h1>table of contents</h1></a><ol>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
 
     <li class="apidocModuleLi"><a href="#apidoc.module.nightmare">module nightmare</a><ol>
 
@@ -164,7 +157,7 @@
   options.maxAuthRetries = options.maxAuthRetries || MAX_AUTH_RETRIES;
 
   electronArgs.loadTimeout = options.loadTimeout;
-  if(options.loadTimeout &#x26;&#x26; options.gotoTimeout &#x26;&#x26; options.loadTimeout &#x3c; options.gotoTimeout){
+  if(options.loadTimeout &amp;&amp; options.gotoTimeout &amp;&amp; options.loadTimeout &lt; options.gotoTimeout){
     debug(`WARNING:  load timeout of ${options.loadTimeout} is shorter than goto timeout of ${options.gotoTimeout}`);
   }
 
@@ -173,7 +166,7 @@
   attachToProcess(this);
 
   // initial state
-  this.state = &#x27;initial&#x27;;
+  this.state = 'initial';
   this.running = false;
   this.ending = false;
   this.ended = false;
@@ -181,23 +174,23 @@
   this._headers = {};
   this.options = options;
 
-  debug(&#x27;queuing process start&#x27;);
-  this.queue((done) =&#x3e; {
+  debug('queuing process start');
+  this.queue((done) =&gt; {
 
     this.proc = proc.spawn(electron_path, [runner].concat(JSON.stringify(electronArgs)), {
-      stdio: [null, null, null, &#x27;ipc&#x27;],
+      stdio: [null, null, null, 'ipc'],
       env: defaults(options.env || {}, process.env)
     });
 
-    this.proc.stdout.pipe(split2()).on(&#x27;data&#x27;, (data) =&#x3e; {
+    this.proc.stdout.pipe(split2()).on('data', (data) =&gt; {
       electronLog.stdout(data);
     });
 
-    this.proc.stderr.pipe(split2()).on(&#x27;data&#x27;, (data) =&#x3e; {
+    this.proc.stderr.pipe(split2()).on('data', (data) =&gt; {
       electronLog.stderr(data);
     });
 
-    this.proc.on(&#x27;close&#x27;, (code) =&#x3e; {
+    this.proc.on('close', (code) =&gt; {
       if(!self.ended){
         handleExit(code, self, noop);
       }
@@ -205,37 +198,37 @@
 
     this.child = child(this.proc);
 
-    this.child.once(&#x27;die&#x27;, function(err){
-      debug(&#x27;dying: &#x27; + err);
+    this.child.once('die', function(err){
+      debug('dying: ' + err);
       self.die = err;
     });
 
     // propagate console.log(...) through
-    this.child.on(&#x27;log&#x27;, function() {
+    this.child.on('log', function() {
       log.apply(log, arguments);
     });
 
-    this.child.on(&#x27;uncaughtException&#x27;, function(stack) {
-      console.error(&#x27;Nightmare runner error:\n\n%s\n&#x27;, &#x27;\t&#x27; + stack.replace(/\n/g, &#x27;\n\t&#x27;));
+    this.child.on('uncaughtException', function(stack) {
+      console.error('Nightmare runner error:\n\n%s\n', '\t' + stack.replace(/\n/g, '\n\t'));
       endInstance(self, noop);
       process.exit(1);
     });
 
-    this.child.on(&#x27;page&#x27;, function(type) {
-      log.apply(null, [&#x27;page-&#x27; + type].concat(sliced(arguments, 1)));
+    this.child.on('page', function(type) {
+      log.apply(null, ['page-' + type].concat(sliced(arguments, 1)));
     });
 
     // propogate events through to debugging
-    this.child.on(&#x27;did-finish-load&#x27;, function () { log(&#x27;did-finish-load&#x27;, JSON.stringify(Array.prototype.slice.call(arguments))); });
-    this.child.on(&#x27;did-fail-load&#x27;, function () { log(&#x27;did-fail-load&#x27;, JSON.stringify(Array.prototype.slice.call(arguments))); });
-    this.child.on(&#x27;did-fail-provisional-load&#x27;, function () { log(&#x27;did-fail-provisional-load&#x27;, JSON.stringify(Array.prototype.slice
+    this.child.on('did-finish-load', function () { log('did-finish-load', JSON.stringify(Array.prototype.slice.call(arguments))); });
+    this.child.on('did-fail-load', function () { log('did-fail-load', JSON.stringify(Array.prototype.slice.call(arguments))); });
+    this.child.on('did-fail-provisional-load', function () { log('did-fail-provisional-load', JSON.stringify(Array.prototype.slice
 .call(arguments))); });
-    this.child.on(&#x27;did-frame-finish-load&#x27;, function () { log(&#x27;did-frame-finish-load&#x27;, JSON.stringify(Array.prototype.slice.call(
+    this.child.on('did-frame-finish-load', function () { log('did-frame-finish-load', JSON.stringify(Array.prototype.slice.call(
 arguments))); });
-    this.child.on(&#x27;did-start-loading&#x27;, function () { log(&#x27;did-start-loading&#x27;, JSON.stringify(Array.prototype.slice.call(arguments
+    this.child.on('did-start-loading', function () { log('did-start-loading', JSON.stringify(Array.prototype.slice.call(arguments
 ))); });
-    this.child.on(&#x27;did-stop-loading&#x27;, function () { log(&#x27;did-stop-loading&#x27;, JSON.stringify(Array.prototype.slice.call(arguments))); });
-    this.child.on(&#x27;did-get-response-details&#x27;, function () { log(&#x27;did-get-response-details&#x27;, JSON.stringify(Array.prototype.slice
+    this.child.on('did-stop-loading', function () { log('did-stop-loading', JSON.stringify(Array.prototype.slice.call(arguments))); });
+    this.child.on('did-get-response-details', function () { log('did-get-response-details', JSON.stringify(Array.prototype.slice
 .call(arguments))); }); ...</pre></li>
     <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
@@ -272,11 +265,11 @@ arguments))); });
   }
 
   // support functions and objects
-  // if it&#x27;s an object, wrap it&#x27;s
+  // if it's an object, wrap it's
   // properties in the queue function
 
   if(parentfn) {
-    if (typeof parentfn === &#x27;function&#x27;) {
+    if (typeof parentfn === 'function') {
       Nightmare.prototype[name] = queued(name, parentfn);
     } else {
       if (!~Nightmare.namespaces.indexOf(name)) {
@@ -293,17 +286,17 @@ arguments))); });
   }
 
   if(childfn) {
-    if (typeof childfn === &#x27;function&#x27;) {
+    if (typeof childfn === 'function') {
      Nightmare.childActions[name] = childfn;
     } else {
       for(var key in childfn){
-        Nightmare.childActions[name+&#x27;.&#x27;+key] = childfn;
+        Nightmare.childActions[name+'.'+key] = childfn;
       }
     }
   }
 }</pre></li>
     <li>example usage<pre class="apidocCodePre">...
-var Promise = require(&#x27;bluebird&#x27;);
+var Promise = require('bluebird');
 
 var nightmare = Nightmare({ Promise });
 ```
@@ -312,10 +305,10 @@ var nightmare = Nightmare({ Promise });
 
 #### Nightmare.<span class="apidocCodeKeywordSpan">action</span>(name, [electronAction|electronNamespace], action|namespace)
 
-You can add your own custom actions to the Nightmare prototype. Here&#x27;s an example:
+You can add your own custom actions to the Nightmare prototype. Here's an example:
 
 ```js
-Nightmare.action(&#x27;size&#x27;, function (done) {
+Nightmare.action('size', function (done) {
 this.evaluate_now(function() {
   var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
 ...</pre></li>
@@ -351,3 +344,4 @@ this.evaluate_now(function() {
     ]
 </div>
 </div>
+</body></html>
